@@ -101,8 +101,70 @@ public class SinglyLinkedList<E extends Comparable<E>> {
 
     // write your codes here
     public void swap(){
-        
+        //order nodes
+        ArrayList<E> order = new ArrayList<E>(); 
+        Node<E> cur = head;
+        while (cur != null) {
+            order.add(cur.getElement());
+            cur = cur.getNext();
+        }
+        Collections.sort(order);
 
+        Node<E> swap1 = head; //first Node to be swapped
+        Node<E> prev1 = head; //Node prior to first Node to be swapped
+        Node<E> next1 = swap1.getNext(); //Node after Node to be swapped
+        while (next1 != null) {
+            if (order.contains(swap1.getElement())) {
+                int index1 = order.indexOf(swap1.getElement()); //order of first Node
+                int index2 = order.size() - index1 - 1;
+
+                if (index1 != index2) {
+                    //look for Node to be swapped with
+                    Node<E> prev2 = swap1;
+                    Node<E> swap2 = swap1.getNext();
+                    while (!(swap2.getElement().equals(order.get(index2)))) {
+                        prev2 = swap2;
+                        swap2 = swap2.getNext();
+                    }
+
+                    //swap Nodes
+                    prev1.setNext(swap2);
+                    swap1.setNext(swap2.getNext());
+                    if (swap2 == next1) { //swap2 is the immediate next Node
+                        swap2.setNext(swap1);
+                    } else {
+                        prev2.setNext(swap1);
+                        swap2.setNext(next1);
+                    }
+                    if (swap1 == head) {
+                        head = swap2;
+                    }
+                    if (swap2 == tail) {
+                        tail = swap1;
+                    }
+
+                    prev1 = swap2;
+                    //avoid double-swapping
+                    if (index1 < index2) {
+                        order.remove(index1);
+                        order.remove(index2 - 1);
+                    } else {
+                        order.remove(index2);
+                        order.remove(index1 - 1);
+                    }
+
+                } else {
+                    prev1 = swap1;
+                    order.remove(index1);
+                }
+            } else {
+                prev1 = swap1;
+            }
+
+            //reset for next swap
+            swap1 = next1;
+            next1 = swap1.getNext();
+        }
     }
    
 }
