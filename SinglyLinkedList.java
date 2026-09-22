@@ -113,7 +113,7 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         Node<E> swap1 = head; //first Node to be swapped
         Node<E> prev1 = head; //Node prior to first Node to be swapped
         Node<E> next1 = swap1.getNext(); //Node after Node to be swapped
-        while (next1 != null) {
+        while (next1 != null && order.size() != 0) {
             if (order.contains(swap1.getElement())) {
                 int index1 = order.indexOf(swap1.getElement()); //order of first Node
                 int index2 = order.size() - index1 - 1;
