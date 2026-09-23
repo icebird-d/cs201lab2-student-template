@@ -104,23 +104,16 @@ public class SinglyLinkedList<E extends Comparable<E>> {
 
         //order nodes based on value
         ArrayList<Node<E>> order = new ArrayList<Node<E>>();
-        order.add(head);
-        Node<E> cur = head.getNext();
+        Node<E> cur = head;
         while (cur != null) {
-            if (order.get(0).getElement().compareTo(cur.getElement()) < 0) { //smallest
-                order.add(0, cur);
-            } else if (order.get(order.size() - 1).getElement().compareTo(cur.getElement()) > 0) { //largest
-                order.add(cur);
-            } else {
-                for (int i = 0; i < order.size() - 1; i++) {
-                    if (order.get(i).getElement().compareTo(cur.getElement()) > 0 &&
-                            order.get(i+1).getElement().compareTo(cur.getElement()) < 0) {
-                            order.add(i+1, cur);
-                        }
-                }
-            }
+            order.add(cur);
             cur = cur.getNext();
         }
+        Collections.sort(order, new Comparator<Node<E>>() {
+            public int compare(Node<E> a, Node<E> b) {
+                return a.getElement().compareTo(b.getElement());
+            }
+        });
 
         HashMap<Node<E>, Node<E>> map = new HashMap<Node<E>, Node<E>>(order.size() / 2);
         for (int j = 0; j < ((order.size() / 2) + 1); j++) {
