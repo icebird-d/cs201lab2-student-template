@@ -100,71 +100,46 @@ public class SinglyLinkedList<E extends Comparable<E>> {
     }
 
     // write your codes here
-    public void swap(){
-        //order nodes
-        ArrayList<E> order = new ArrayList<E>(); 
-        Node<E> cur = head;
+    public void swap() {
+
+        //order nodes based on value
+        ArrayList<Node<E>> order = new ArrayList<Node<E>>();
+        order.add(head);
+        Node<E> cur = head.getNext();
         while (cur != null) {
-            order.add(cur.getElement());
+            if (order.get(0).getElement().compareTo(cur.getElement()) < 0) { //smallest
+                order.add(0, cur);
+            } else if (order.get(order.size() - 1).getElement().compareTo(cur.getElement()) > 0) { //largest
+                order.add(cur);
+            } else {
+                for (int i = 0; i < order.size() - 1; i++) {
+                    if (order.get(i).getElement().compareTo(cur.getElement()) > 0 &&
+                            order.get(i+1).getElement().compareTo(cur.getElement()) < 0) {
+                            order.add(i+1, cur);
+                        }
+                }
+            }
             cur = cur.getNext();
         }
-        Collections.sort(order);
 
-        Node<E> swap1 = head; //first Node to be swapped
-        Node<E> prev1 = head; //Node prior to first Node to be swapped
-        Node<E> next1 = swap1.getNext(); //Node after Node to be swapped
-        while (next1 != null && order.size() != 0) {
-            if (order.contains(swap1.getElement())) {
-                int index1 = order.indexOf(swap1.getElement()); //order of first Node
-                int index2 = order.size() - index1 - 1;
-
-                if (index1 != index2) {
-                    //look for Node to be swapped with
-                    Node<E> prev2 = swap1;
-                    Node<E> swap2 = swap1.getNext();
-                    while (!(swap2.getElement().equals(order.get(index2)))) {
-                        prev2 = swap2;
-                        swap2 = swap2.getNext();
-                    }
-
-                    //swap Nodes
-                    prev1.setNext(swap2);
-                    swap1.setNext(swap2.getNext());
-                    if (swap2 == next1) { //swap2 is the immediate next Node
-                        swap2.setNext(swap1);
-                    } else {
-                        prev2.setNext(swap1);
-                        swap2.setNext(next1);
-                    }
-                    if (swap1 == head) {
-                        head = swap2;
-                    }
-                    if (swap2 == tail) {
-                        tail = swap1;
-                    }
-
-                    prev1 = swap2;
-                    //avoid double-swapping
-                    if (index1 < index2) {
-                        order.remove(index1);
-                        order.remove(index2 - 1);
-                    } else {
-                        order.remove(index2);
-                        order.remove(index1 - 1);
-                    }
-
-                } else {
-                    prev1 = swap1;
-                    order.remove(index1);
-                }
-            } else {
-                prev1 = swap1;
-            }
-
-            //reset for next swap
-            swap1 = next1;
-            next1 = swap1.getNext();
+        HashMap<Node<E>, Node<E>> map = new HashMap<Node<E>, Node<E>>(order.size() / 2);
+        for (int j = 0; j < order.size(); j++) {
+            map.put(order.get(j), order.get(order.size()-j-1));
         }
+        //HashMap map maps each Node to its partner value
+
+        //swapped SinglyLinkedList
+        SinglyLinkedList<E> result = new SinglyLinkedList<E>();
+        Node<E> swap1 = head; //first Node from original SLL to be swapped
+        while (swap1 != null) {
+            Node<E> swap2 = map.get(swap1); //Node to be swapped with
+            result.addLast(swap2.getElement());
+            swap1 = swap1.getNext();
+        }
+
+        //result SLL is now this SLL
+        this.head = result.head;
+        this.tail = result.tail;
     }
    
 }
