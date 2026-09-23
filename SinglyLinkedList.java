@@ -123,8 +123,9 @@ public class SinglyLinkedList<E extends Comparable<E>> {
         }
 
         HashMap<Node<E>, Node<E>> map = new HashMap<Node<E>, Node<E>>(order.size() / 2);
-        for (int j = 0; j < order.size(); j++) {
+        for (int j = 0; j < (order.size() / 2); j++) {
             map.put(order.get(j), order.get(order.size()-j-1));
+            map.put(order.get(order.size()-j-1), order.get(j));
         }
         //HashMap map maps each Node to its partner value
 
